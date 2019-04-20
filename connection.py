@@ -1,10 +1,11 @@
-from urllib.parse import urlencode
-from requests import request
-from hashlib import sha256
 import hmac
 import time
-from config import API_KEY, API_SECRET
-from urllib.parse import quote
+from hashlib import sha256
+from urllib.parse import quote, urlencode
+
+from requests import request
+
+from config import API_KEY, API_SECRET, BASE_URL
 
 
 def generate_nonce():
@@ -26,9 +27,6 @@ def generate_headers(method, endpoint, data=""):
         'api-key': API_KEY,
         'api-signature': generate_signature(method, endpoint, nonce, data)
     }
-
-
-BASE_URL = "https://www.bitmex.com/api/v1"
 
 
 def make_request(method, endpoint, params={}):
