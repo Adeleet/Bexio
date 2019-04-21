@@ -22,21 +22,24 @@ def download_data(source):
             file_object.write(req.content)
 
 
-def create_dataframes():
-    if min(
-            len(glob("data\\quote\\*.csv.gz")),
-            len(glob("data\\quote\\*.csv.gz"))) < 0:
+def create_dataframe(source):
+    file_index, df_index = 1, 1
+    if source not in ["trade", "quote"]:
+        raise ValueError("source should be 'trade' or 'quote'")
+    if len(glob("data\\quote\\*.csv.gz")) == 0:
         raise EnvironmentError(
             "No data found, please run download_data() first")
-
-    quote_dfs = [pd.read_csv(f"data/quote/{f}")
-                 for f in os.listdir("data/quote")[:10]]
-    pd.concat(quote_dfs).to_csv("data/quote.csv.gz", compression="gzip")
-    quote_dfs = None
-    trade_dfs = [pd.read_csv(f"data/trade/{f}")
-                 for f in os.listdir("data/trade")]
-
-    pd.concat(trade_dfs).to_csv("data/trade.csv.gz", compression="gzip")
-
-
-create_dataframes()
+    df_list = []
+    file_list = os.listdir(f"data/{source}")
+    num_files = len(file_list)
+    for f in file_list:
+        df_list.append(pd.read_csv(f"data/{source}/{f}"))
+        if file_index == 50 or f == file_list[-1]:
+            df = pd.concat(df_list)
+            df_list = []
+            df.to_csv(f"data/{source}-{df_index}.csv.gz",
+                      compression="gzip", index=False)
+            print(f"{df_index*50} / {num_files}")
+            df_index += 1
+            file_index = 0
+        file_index += 1
