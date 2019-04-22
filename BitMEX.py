@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 from urllib.parse import urlencode
 
 from requests import Session
@@ -9,6 +10,8 @@ from connection import generate_headers
 class BitMEX:
     def __init__(self):
         self.session = Session()
+        self.response_headers = {}
+        self.rate_remaining = 300
 
     def make_request(self, method, endpoint, params={}):
         if params:
@@ -18,7 +21,14 @@ class BitMEX:
             headers = generate_headers(f"{method}", f"{endpoint}")
         r = self.session.request(method, f"{BASE_URL}/{endpoint}",
                                  params=params, headers=headers)
-        return r.json()
+        self.response_headers = r.headers
+        # self.rate_remaining = int(
+        #     self.response_headers['X-ratelimit-remaining'])
+        try:
+            return r.json()
+        except JSONDecodeError as e:
+            raise ValueError(
+                f"JSONDecodeError\nr.headers: {r.headers}\nr.text: {r.text}\nJSONDecodeError:{e}")
 
     def executions(self, params=None):
         return self.make_request("GET", "/execution/tradeHistory", params)
