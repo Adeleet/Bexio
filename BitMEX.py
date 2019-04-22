@@ -11,6 +11,7 @@ class BitMEX:
     def __init__(self):
         self.session = Session()
         self.response_headers = {}
+        self.request_headers = {}
         self.rate_remaining = 300
 
     def make_request(self, method, endpoint, params={}):
@@ -22,6 +23,7 @@ class BitMEX:
         r = self.session.request(method, f"{BASE_URL}/{endpoint}",
                                  params=params, headers=headers)
         self.response_headers = r.headers
+        self.request_headers = headers
         # self.rate_remaining = int(
         #     self.response_headers['X-ratelimit-remaining'])
         try:
