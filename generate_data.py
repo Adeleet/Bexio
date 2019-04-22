@@ -9,17 +9,17 @@ import requests
 
 from BitMEX import BitMEX
 
-client = BitMEX()
+columns = ['close', 'foreignNotional', 'high', 'homeNotional', 'lastSize',
+           'low', 'open', 'symbol', 'timestamp', 'trades', 'turnover',
+           'volume', 'vwap']
 
 
 def get_bucketed_trades():
     client = BitMEX()
-    trade_data = np.empty((0, 12))
+    trade_data = np.empty((0, len(columns)))
     total_elapsed = (datetime.now() - datetime(2017, 1, 1))
     total_minutes = int((total_elapsed.total_seconds() / 60))
     progress = 0
-    columns = ['close', 'foreignNotional', 'high', 'lastSize', 'low', 'open',
-               'symbol', 'timestamp', 'trades', 'turnover', 'volume', 'vwap']
     for i in range(0, total_minutes, 750):
         time.sleep(0.8)
         if "x-ratelimit-remaining" in client.response_headers.keys():
@@ -36,8 +36,7 @@ def get_bucketed_trades():
                                   "binSize": "1m",
                                   "start": i,
                                   "count": 750,
-                                  "symbol": "XBTUSD",
-                                  "columns": ",".join(columns)})).values
+                                  "symbol": "XBTUSD"}))
         try:
             trade_data = np.vstack([trade_data, new_values])
         except ValueError:
