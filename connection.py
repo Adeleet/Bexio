@@ -7,7 +7,7 @@ from config import API_KEY, API_SECRET
 
 
 def generate_nonce():
-    return int(time.time())
+    return int(time.time() + 100)
 
 
 def generate_signature(verb, endpoint, expires, data=""):
