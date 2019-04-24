@@ -8,4 +8,3 @@ Algorithmic Trading using BitMEX
 
 #### Improvements
 - use raw bid/ask quote as input (calculate dollar volume, bid/ask spread, hlc, etc.)
--
