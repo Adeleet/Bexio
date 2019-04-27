@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from stats_columns import stats_columns
+from RL.stats_columns import stats_columns
 
 
 class Observation:

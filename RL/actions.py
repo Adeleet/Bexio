@@ -1,12 +1,9 @@
-import sys
+
 
 import pandas as pd
-
-from BitMEX import BitMEX
-from observation import Observation
-from reward import pnl
-
-sys.path.append("..")
+import BitMEX
+from RL import reward
+from RL.observation import Observation
 
 
 def buy(client, ob):
@@ -22,5 +19,5 @@ def hold(client, ob):
     last_vwap = ob.last_vwap
 
 
-client = BitMEX()
+client = BitMEX.BitMEX()
 ob = Observation(client)
