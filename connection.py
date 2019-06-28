@@ -7,6 +7,12 @@ from config import API_KEY, API_SECRET
 
 
 def generate_nonce():
+    """
+    Generates nonce for signature
+
+    Returns:
+        nonce (int) : timestamp epoch
+    """
     return int(time.time() + 100)
 
 
