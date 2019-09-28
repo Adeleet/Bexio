@@ -46,18 +46,31 @@ def get_bucketed_trades():
 
 
 def download_data(source):
+    """
+    Downloads all historical data, using either trades or quotes
+
+    Arguments:
+        source (str) : type of data, must be 'trade' or 'quote'
+    """
+
+    # Ensure that argument source is trade or quote
     if source not in ["trade", "quote"]:
         raise ValueError("source should be 'trade' or 'quote'")
+
+    # Open and read specified source urls .txt file (trade or quote)
     with open(f"data/{source}_urls.txt") as file_object:
         file_lines = file_object.readlines()
         urls = [q.strip() for q in file_lines]
-    sess = requests.Session()
+
+    # Create /data/trade or /data/quote if it does not exist
     if not os.path.exists(f"./data/{source}"):
         os.makedirs(f"./data/{source}")
+
+    # Initialize session, fetch .csv files using urls read from .txt file
+    sess = requests.Session()
     for url in urls:
         file_name = url[url.index(source) + 6:]
         req = sess.get(url)
-
         with open(f"./data/{source}/{file_name}", "wb") as file_object:
             file_object.write(req.content)
 
